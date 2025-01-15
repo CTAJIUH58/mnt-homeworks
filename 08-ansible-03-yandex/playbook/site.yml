@@ -1,0 +1,119 @@
+---
+- name: Install Clickhouse
+  hosts: clickhouse
+  handlers:
+    - name: Start clickhouse service
+      become: true
+      ansible.builtin.service:
+        name: clickhouse-server
+        state: restarted
+  tasks:
+    - name: Clickhouse | Download
+      block:
+        - name: Clickhouse | Download | Main source
+          ansible.builtin.get_url:
+            url: "https://packages.clickhouse.com/rpm/stable/{{ item }}-{{ clickhouse_version }}.noarch.rpm"
+            dest: "./{{ item }}-{{ clickhouse_version }}.rpm"
+            mode: "0644"
+          with_items: "{{ clickhouse_packages }}"
+          tags:
+            - clickhouse
+      rescue:
+        - name: Clickhouse | Download | Rescue source
+          ansible.builtin.get_url:
+            url: "https://packages.clickhouse.com/rpm/stable/clickhouse-common-static-{{ clickhouse_version }}.x86_64.rpm"
+            dest: "./clickhouse-common-static-{{ clickhouse_version }}.rpm"
+            mode: "0644"
+          tags:
+            - clickhouse
+    - name: Clickhouse | Install
+      become: true
+      ansible.builtin.dnf:
+        name:
+          - clickhouse-common-static-{{ clickhouse_version }}.rpm
+          - clickhouse-client-{{ clickhouse_version }}.rpm
+          - clickhouse-server-{{ clickhouse_version }}.rpm
+      notify: Start clickhouse service
+      tags:
+        - clickhouse
+    - name: Flush handlers
+      ansible.builtin.meta: flush_handlers
+      tags:
+        - clickhouse
+    - name: Clickhouse | Create database
+      ansible.builtin.command: "clickhouse-client -q 'create database logs;'"
+      register: create_db
+      failed_when: create_db.rc != 0 and create_db.rc != 82
+      changed_when: create_db.rc == 0
+      tags:
+        - clickhouse
+
+- name: Install vector
+  hosts: vector
+  handlers:
+    - name: Restart vector
+      become: true
+      ansible.builtin.service:
+        name: vector
+        state: restarted
+  tasks:
+    - name: Download Vector
+      ansible.builtin.get_url:
+        url: https://apt.vector.dev/pool/v/ve/vector_0.43.1-1_amd64.deb
+        dest: /home/user/vector_0.43.1-1_amd64.deb
+        mode: "0755"
+    - name: Install Vector
+      become: true
+      ansible.builtin.apt:
+        deb: /home/user/vector_0.43.1-1_amd64.deb
+    - name: Updating vector config
+      become: true
+      ansible.builtin.template:
+        src: templates/vector.j2
+        dest: /etc/vector/vector.yaml
+        mode: '644'
+      notify: Restart vector
+
+- name: Install lighthouse
+  hosts: lighthouse
+  handlers:
+    - name: Nginx reload
+      become: true
+      ansible.builtin.service:
+        name: nginx
+        state: restarted
+  pre_tasks:
+    - name: Apt update
+      become: true
+      ansible.builtin.apt:
+        update_cache: true
+    - name: Install git
+      become: true
+      ansible.builtin.apt:
+        name: git
+        state: present
+    - name: Install nginx
+      become: true
+      ansible.builtin.apt:
+        name: nginx
+        state: present
+    - name: Apply nginx config
+      become: true
+      ansible.builtin.template:
+        src: nginx.conf.j2
+        dest: /etc/nginx/nginx.conf
+        mode: '644'
+  tasks:
+    - name: Clon Lighthouse repo
+      ansible.builtin.git:
+        repo: "https://github.com/VKCOM/lighthouse.git"
+        dest: "/home/{{ ansible_user_id }}/lighthouse"
+        version: master
+  post_tasks:
+    - name: Apply lighthouse nginx config
+      become: true
+      ansible.builtin.template:
+        src: lighthouse_nginx.conf.j2
+        dest: /etc/nginx/conf.d/lighthouse.conf
+        mode: '644'
+      notify: Nginx reload
