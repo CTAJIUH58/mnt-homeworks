@@ -1,4 +1,4 @@
-# Домашнее задание к занятию 4 «Работа с roles»
+# Домашнее задание к занятию 4 «Работа с roles» Ершов Сергей
 
 ## Подготовка к выполнению
 
@@ -36,6 +36,15 @@
 9. Переработайте playbook на использование roles. Не забудьте про зависимости LightHouse и возможности совмещения `roles` с `tasks`.
 10. Выложите playbook в репозиторий.
 11. В ответе дайте ссылки на оба репозитория с roles и одну ссылку на репозиторий с playbook.
+
+
+### Ответ
+
+
+Ссылки на репозитории ролей:
+[Vector](https://github.com/CTAJIUH58/vector-role)
+[lighthouse](https://github.com/CTAJIUH58/lighthouse-role)
+[Playbook](https://github.com/CTAJIUH58/mnt-homeworks/blob/MNT-video/08-ansible-04-role/playbook/README.md)
 
 ---
 
