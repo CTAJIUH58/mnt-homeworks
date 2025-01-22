@@ -40,13 +40,13 @@
 ### Решение
 
 
-![1](https://github.com/CTAJIUH58/mnt-homeworks/blob/MNT-video/09-ci-01-intro/img/1-2.png)
+![bug workflow](https://github.com/CTAJIUH58/mnt-homeworks/blob/MNT-video/09-ci-01-intro/img/1_3.png)
 
 
-![2](https://github.com/CTAJIUH58/mnt-homeworks/blob/MNT-video/09-ci-01-intro/img/1-3.png)
+![other workflow](https://github.com/CTAJIUH58/mnt-homeworks/blob/MNT-video/09-ci-01-intro/img/1_2.png)
 
 
-![5](https://github.com/CTAJIUH58/mnt-homeworks/blob/MNT-video/09-ci-01-intro/img/5-1.png)
+![Scrum](https://github.com/CTAJIUH58/mnt-homeworks/blob/MNT-video/09-ci-01-intro/img/3_1.png)
 
 
 [bug workflow](https://github.com/CTAJIUH58/mnt-homeworks/blob/MNT-video/09-ci-01-intro/bug_wf.xml)
