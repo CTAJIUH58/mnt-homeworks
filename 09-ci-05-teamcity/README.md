@@ -85,7 +85,7 @@
 17. Проведите повторную сборку мастера, убедитесь, что сбора прошла успешно и артефакты собраны.
 
 
-![16-17](https://github.com/CTAJIUH58/mnt-homeworks/blob/MNT-video/09-ci-05-teamcity/img/16-17.png)
+![16-17](https://github.com/CTAJIUH58/mnt-homeworks/blob/MNT-video/09-ci-05-teamcity/img/1617.png)
 
 
 18. Проверьте, что конфигурация в репозитории содержит все настройки конфигурации из teamcity.
